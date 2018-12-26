@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -56,7 +57,9 @@ public class Balise {
     }
 
     public Balise(TextNode node) {
-        this.setTexte(node.toString());
+        if(!StringUtils.isBlank(node.toString())){
+            this.setTexte(node.toString());
+        }
     }
 
     public Balise(Comment node) {
@@ -130,8 +133,11 @@ public class Balise {
             } else if (node.getClass().equals(org.jsoup.nodes.DataNode.class)) {
                 _contenu.add(new Balise((org.jsoup.nodes.DataNode) node));
 
-            } else if (node.getClass().equals(org.jsoup.nodes.TextNode.class)) {
-                _contenu.add(new Balise((TextNode) node));
+            } else if (node.getClass().equals(org.jsoup.nodes.TextNode.class) ) {
+                if( !StringUtils.isBlank(node.toString())){
+                    _contenu.add(new Balise((TextNode) node));
+
+                }
 
             } else if (node.getClass().equals(org.jsoup.nodes.Comment.class)) {
                 _contenu.add(new Balise((org.jsoup.nodes.Comment) node));
